@@ -9,37 +9,72 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public bool gameOver;
-    float   barScore = 10;
+    float barScore = 10;
     float redBarScore = 20;
     float nextBarSecondLimit = 0;
     float levelCount = 0;
     bool callStopGameOnce = false;
+    private Player playerScript;
 
+    string direction;
+    string tempDirection;
+    bool hold = false;
 
     public GameObject[] bars;
     // Start is called before the first frame update
     void Start()
     {
-       
-     
-       
+
+        playerScript = player.GetComponent<Player>();
+
     }
 
-    void StopGame()
+    private void FixedUpdate()
     {
-        if (callStopGameOnce)
-            return;
+        //Vector3 pz = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        player.GetComponent<Player>().playDeathSong();
-        this.gameObject.GetComponent<AudioSource>().Stop();
-        player.GetComponent<Player>().Freze();
-        RestartGame();
-        callStopGameOnce = true;
+
+        //if (Input.GetMouseButtonDown(0))
+        //{
+
+        //    //sol -3.5 0 
+        //    //sağ 3.5 0 
+
+        //    //left side
+        //    if (pz.x > -3.5f && pz.x < 0)
+        //    {
+        //        direction = "left";
+        //        hold = true;
+        //        //playerScript.MoveLeft();
+        //    }
+
+        //    if (pz.x < 3.5f && pz.x > 0)
+        //    {
+        //        direction = "right";
+        //        hold = true;
+        //    }
+
+        //}
+
+        ////elini çekmiş
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    hold = false;
+        //}
+
+        //if (hold && direction == "left")
+        //    playerScript.MoveLeft();
+
+        //if (hold && direction == "right")
+        //    playerScript.MoveRight();
+
+      
+
     }
-
     // Update is called once per frame
     void Update()
     {
+
         if (gameOver)
         {
             StopGame();
@@ -51,6 +86,17 @@ public class GameManager : MonoBehaviour
 
     }
 
+    void StopGame()
+    {
+        if (callStopGameOnce)
+            return;
+
+        playerScript.playDeathSong();
+        this.gameObject.GetComponent<AudioSource>().Stop();
+        playerScript.Freze();
+        RestartGame();
+        callStopGameOnce = true;
+    }
     void levelCreator()
     {
         nextBarSecondLimit = nextBarSecondLimit + Time.deltaTime;
@@ -62,7 +108,7 @@ public class GameManager : MonoBehaviour
             nextBarSecondLimit = 0;
 
             if (levelCount == 1)
-            {                
+            {
                 Instantiate(bars[0], new Vector3(createOnX, createOnY, 0), Quaternion.identity);
             }
 

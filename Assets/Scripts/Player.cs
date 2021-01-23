@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
             //     0,
             //     0);
             //rb.AddForce(Vector2.left * forceValue * Time.deltaTime, ForceMode2D.Force);
-            rb.velocity = new Vector2(forceValue * Time.deltaTime, rb.velocity.y);
+            MoveRight();
 
         }
 
@@ -40,8 +40,13 @@ public class Player : MonoBehaviour
             //    0, 
             //    0);
             //rb.AddForce(new Vector2(transform.position.x * forceValue * Time.deltaTime, transform.position.y));
-            rb.velocity = new Vector2(-forceValue * Time.deltaTime, rb.velocity.y);
+            MoveLeft();
         }
+
+
+
+        TouchControl();
+
 
         //game wall
         Vector2 temp = transform.position;
@@ -64,6 +69,40 @@ public class Player : MonoBehaviour
         //game wall
 
 
+    }
+
+
+    private void TouchControl()
+    {
+        if(Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+
+            //right
+            if(touchPos.x > 0)
+            {
+                MoveRight();
+            }
+
+            //right
+            if (touchPos.x < 0)
+            {
+                MoveLeft();
+            }
+        }
+
+    }
+
+
+    public void MoveLeft()
+    {
+        rb.velocity = new Vector2(-forceValue * Time.deltaTime, rb.velocity.y);
+    }
+
+    public void MoveRight()
+    {
+        rb.velocity = new Vector2(forceValue * Time.deltaTime, rb.velocity.y);
     }
 
     public void MovePlatform(float x)

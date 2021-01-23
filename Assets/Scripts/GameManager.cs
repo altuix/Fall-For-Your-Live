@@ -9,8 +9,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public bool gameOver;
-    float barScore = 10;
-    float redBarScore = 20;
+
     float nextBarSecondLimit = 0;
     float levelCount = 0;
     bool callStopGameOnce = false;
@@ -21,56 +20,28 @@ public class GameManager : MonoBehaviour
     bool hold = false;
 
     public GameObject[] bars;
+
+    Vector2 screenBounds;
+    float barSize;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        //screen bounds
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        //Debug.Log(screenBounds.x);
+        //screen bounds
+
+        
+        barSize = bars[0].GetComponent<SpriteRenderer>().bounds.size.x /2;
+        //Debug.Log(barSize);
 
         playerScript = player.GetComponent<Player>();
 
     }
 
-    private void FixedUpdate()
-    {
-        //Vector3 pz = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-
-        //if (Input.GetMouseButtonDown(0))
-        //{
-
-        //    //sol -3.5 0 
-        //    //sağ 3.5 0 
-
-        //    //left side
-        //    if (pz.x > -3.5f && pz.x < 0)
-        //    {
-        //        direction = "left";
-        //        hold = true;
-        //        //playerScript.MoveLeft();
-        //    }
-
-        //    if (pz.x < 3.5f && pz.x > 0)
-        //    {
-        //        direction = "right";
-        //        hold = true;
-        //    }
-
-        //}
-
-        ////elini çekmiş
-        //if (Input.GetMouseButtonUp(0))
-        //{
-        //    hold = false;
-        //}
-
-        //if (hold && direction == "left")
-        //    playerScript.MoveLeft();
-
-        //if (hold && direction == "right")
-        //    playerScript.MoveRight();
-
-      
-
-    }
     // Update is called once per frame
     void Update()
     {
@@ -84,6 +55,11 @@ public class GameManager : MonoBehaviour
         levelCreator();
 
 
+    }
+
+    private void LateUpdate()
+    {
+        
     }
 
     void StopGame()
@@ -102,8 +78,8 @@ public class GameManager : MonoBehaviour
         nextBarSecondLimit = nextBarSecondLimit + Time.deltaTime;
         if (nextBarSecondLimit > 1.5f)
         {
-            float createOnX = Random.Range(-2.247f, 2.444f);
-            float createOnY = -5.24f;
+            float createOnX = Random.Range(-screenBounds.x + barSize, screenBounds.x - barSize);
+            float createOnY = -screenBounds.y - barSize;
             levelCount++;
             nextBarSecondLimit = 0;
 

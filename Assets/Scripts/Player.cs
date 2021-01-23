@@ -6,11 +6,31 @@ public class Player : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float forceValue;
-    private float min_X = -2.65f, max_X = 2.65f;
+    private float min_X, max_X;
     private AudioSource source;
+
+    Vector2 screenBounds;
+    float playerSizeX;
+    GameObject gm;
+    GameManager gmScript;
 
     private void Start()
     {
+        gm = GameObject.Find("GameManager");
+        gmScript = gm.GetComponent<GameManager>();
+
+        //screen bounds
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        Debug.Log(screenBounds.x);
+        //screen bounds
+
+
+        playerSizeX = this.GetComponent<SpriteRenderer>().bounds.size.x / 2;
+        Debug.Log(playerSizeX);
+
+        max_X = screenBounds.x - playerSizeX;
+        min_X = -screenBounds.x + playerSizeX;
+
         source = GetComponent<AudioSource>();
     }
 
@@ -48,6 +68,13 @@ public class Player : MonoBehaviour
         TouchControl();
 
 
+
+
+
+    }
+
+    private void LateUpdate()
+    {
         //game wall
         Vector2 temp = transform.position;
         if (temp.x >= max_X)
@@ -67,10 +94,7 @@ public class Player : MonoBehaviour
 
         transform.position = temp;
         //game wall
-
-
     }
-
 
     private void TouchControl()
     {
@@ -97,12 +121,14 @@ public class Player : MonoBehaviour
 
     public void MoveLeft()
     {
-        rb.velocity = new Vector2(-forceValue * Time.deltaTime, rb.velocity.y);
+        if (!gmScript.gameOver)
+            rb.velocity = new Vector2(-forceValue * Time.deltaTime, rb.velocity.y);
     }
 
     public void MoveRight()
     {
-        rb.velocity = new Vector2(forceValue * Time.deltaTime, rb.velocity.y);
+        if (!gmScript.gameOver)
+            rb.velocity = new Vector2(forceValue * Time.deltaTime, rb.velocity.y);
     }
 
     public void MovePlatform(float x)
